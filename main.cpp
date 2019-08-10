@@ -21,6 +21,20 @@ typedef struct arv {
    Cor cor;
 } *Arv;
 
+void rotacionar_esquerda(struct arv *n);
+void rotacionar_direita(struct arv *n);
+void insercao_caso1(struct arv *n);
+void insercao_caso3(struct arv *n);
+void insercao_caso4(struct arv *n);
+void insercao_caso5(struct arv *n);
+void remocao_caso1(struct arv *n);
+void remocao_caso2(struct arv *n);
+void remocao_caso3(struct arv *n);
+void remocao_caso4(struct arv *n);
+void remocao_caso5(struct arv *n);
+void remocao_caso6(struct arv *n);
+Arv retornaRaiz(Arv *n);
+
 Arv arv(Arv e, Item x, Arv d, Arv p, Cor c) {
    Arv n = (Arv) malloc(sizeof(struct arv));
    n->esq  = e;
@@ -46,7 +60,7 @@ bool busca(Item x, Arv A) {
 		return false;
    	if( x == A->item ) 
 	   	return true;
-   	if( x <= A->item ) 
+   	if( x < A->item ) 
 	   	return busca(x,A->esq);
    	else 
 	   	return busca(x,A->dir);
@@ -57,7 +71,7 @@ Arv busca_No(Item x, Arv A){
 		return NULL;
    	if( x == A->item ) 
 	   	return A;
-   	if( x <= A->item ) 
+   	if( x < A->item ) 
 	   	return busca_No(x,A->esq);
    	else 
 	   	return busca_No(x,A->dir);
@@ -88,20 +102,6 @@ void destroi(Arv *A) {
    free(*A);
    *A = NULL;
 }
-
-void rotacionar_esquerda(struct arv *n);
-void rotacionar_direita(struct arv *n);
-void insercao_caso1(struct arv *n);
-void insercao_caso3(struct arv *n);
-void insercao_caso4(struct arv *n);
-void insercao_caso5(struct arv *n);
-void remocao_caso1(struct arv *n);
-void remocao_caso2(struct arv *n);
-void remocao_caso3(struct arv *n);
-void remocao_caso4(struct arv *n);
-void remocao_caso5(struct arv *n);
-void remocao_caso6(struct arv *n);
-Arv retornaRaiz(Arv *n);
 
 //Encontrar Avo
 Arv bAvo(struct arv *n){
@@ -160,6 +160,7 @@ void insercao_caso1(struct arv *n){
 	if (n->pai == NULL){
 		n->cor = Black;
 	}
+	//Inserção caso 2
 	else if (n->pai->cor == Black)
 		return;
 	else
@@ -232,14 +233,6 @@ void rotacionar_direita(struct arv *n){
     n->pai = r;
 }
 
-//Usado para encontrar a nova raiz
-Arv retornaRaiz(struct arv *n){
-	if(n->pai == NULL)
-		return n;
-	else
-		return retornaRaiz(n->pai);
-}
-
 Arv max_no(Arv A) {
    	if( A == NULL ) 
    		abort();
@@ -276,7 +269,7 @@ void rem(Item x, Arv *A) {
     //verify_properties(t);
 }
 void remocao_caso1(struct arv *n){
-	//O primeiro caso verifica se o pai do nó não é nulo, se for vai para o segundo caso.
+	//O primeiro caso verifica se o pai do nó é nulo, se não for vai para o segundo caso.
 	if(n->pai != NULL)
 		remocao_caso2(n);
 }
@@ -358,6 +351,14 @@ void remocao_caso6(struct arv *n){
 		irmao->esq->cor = Black;
 		rotacionar_direita(pai);
 	}
+}
+
+//Usado para encontrar a nova raiz
+Arv retornaRaiz(struct arv *n){
+	if(n->pai == NULL)
+		return n;
+	else
+		return retornaRaiz(n->pai);
 }
 
 
